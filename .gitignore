@@ -213,3 +213,9 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+/CarbonAtom.class
+/ChemicalBondingCreator.class
+/HydrogenAtom.class
+/HydrogenAtomGenerator.class
+/Main.class
+/CarbonAtomGenerator.class

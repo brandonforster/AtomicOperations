@@ -13,6 +13,10 @@ public class Main {
 		thread = new Thread(hag);
 		thread.start();
 		
+		// create the carbon atom generator
+		CarbonAtomGenerator cag = new CarbonAtomGenerator(cbc);
+		thread = new Thread(cag);
+		thread.start();
 		
 		
 	}
