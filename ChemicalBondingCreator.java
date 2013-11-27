@@ -1,3 +1,10 @@
+// Brandon Forster
+// COP 4600- Operating Systems
+// Homework 2- Threading
+// 2 December 2013
+// ChemicalBondingCreator.java
+// Bonds atoms together.
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;

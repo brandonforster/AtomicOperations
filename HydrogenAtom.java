@@ -1,3 +1,10 @@
+// Brandon Forster
+// COP 4600- Operating Systems
+// Homework 2- Threading
+// 2 December 2013
+// HydrogenAtom.java
+// The HydrogenAtom object.
+
 public class HydrogenAtom implements Runnable {
 
 	private ChemicalBondingCreator cbc;

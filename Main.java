@@ -1,4 +1,10 @@
-
+// Brandon Forster
+// COP 4600- Operating Systems
+// Homework 2- Threading
+// 2 December 2013
+// Main.java
+// The main function class for AtomicOperations.
+		
 public class Main {
 
 	

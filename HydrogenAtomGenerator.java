@@ -1,3 +1,10 @@
+// Brandon Forster
+// COP 4600- Operating Systems
+// Homework 2- Threading
+// 2 December 2013
+// HydrogenAtomGenerator.java
+// Generates hydrogen atoms at random intervals.
+
 import java.util.Random;
 
 public class HydrogenAtomGenerator implements Runnable {

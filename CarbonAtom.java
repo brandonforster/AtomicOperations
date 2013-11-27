@@ -1,3 +1,10 @@
+// Brandon Forster
+// COP 4600- Operating Systems
+// Homework 2- Threading
+// 2 December 2013
+// CarbonAtom.java
+// The CarbonAtom object.
+
 public class CarbonAtom implements Runnable {
 
 	private ChemicalBondingCreator cbc;
