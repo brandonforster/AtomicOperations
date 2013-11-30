@@ -3,7 +3,7 @@
 // Homework 2- Threading
 // 2 December 2013
 // AtomGenerator.java
-// Generates hydrogen atoms at random intervals.
+// Generates atoms at random intervals.
 
 import java.util.Random;
 

@@ -25,13 +25,13 @@ public class Atom implements Runnable {
 	public void run() {
 		System.out.println("Element #"+atomicNumber+" atom no: " + count + " created.");
 		// mutex on aList
-		synchronized(cbc.atomListArray[atomicNumber])
+		synchronized(cbc.atomListArray.get(atomicNumber))
 		{
-			cbc.atomListArray[atomicNumber].add(this);
+			cbc.atomListArray.get(atomicNumber).add(this);
 		}
 		
 		// add 1 permit to semaphore
-		cbc.atomSemaphoreArray[atomicNumber].release(1);
+		cbc.atomSemaphoreArray.get(atomicNumber).release(1);
 		
 		System.out.println("Element #"+atomicNumber+" atom no: " + count
 				+ " waiting for bonding.");

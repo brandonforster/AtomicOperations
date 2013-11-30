@@ -5,32 +5,33 @@
 // ChemicalBondingCreator.java
 // Bonds atoms together.
 
+import java.util.*;
 import java.util.concurrent.*;
 
 public class ChemicalBondingCreator implements Runnable {
 	private int numElements;
 	private int numBonds[];
 
-	public Semaphore atomWaitArray[] = new Semaphore[numElements];	
-	public Semaphore atomSemaphoreArray[] = new Semaphore[numElements];
-	public ConcurrentLinkedQueue<Atom> atomListArray[]= new ConcurrentLinkedQueue[numElements];
+	// forms 2D lists to keep track of these per element
+	public ArrayList<ConcurrentLinkedQueue<Atom>> atomListArray=
+			new ArrayList<ConcurrentLinkedQueue<Atom>>();
+	public ArrayList<Semaphore> atomWaitArray= new ArrayList<Semaphore>();
+	public ArrayList<Semaphore> atomSemaphoreArray= new ArrayList<Semaphore>();
 
 	public ChemicalBondingCreator(int numElements, int[] numBonds) {
 		this.numElements= numElements;
 		this.numBonds= numBonds;
 		
-		System.out.println(atomWaitArray.length);
-		
 		for (int i = 0; i < numElements; i++)
 		{
 			// set up the array of queues per element
-			atomListArray[i]= new ConcurrentLinkedQueue<Atom>();
-			
+			atomListArray.add(new ConcurrentLinkedQueue<Atom>());
+
 			// set up the array of waitons per element
-			atomWaitArray[i]= new Semaphore(0);
-			
+			atomWaitArray.add(new Semaphore(0));
+
 			// set up the array of semaphores per element
-			atomSemaphoreArray[i]= new Semaphore(0);
+			atomSemaphoreArray.add(new Semaphore(0));
 		}
 	}
 
@@ -49,7 +50,7 @@ public class ChemicalBondingCreator implements Runnable {
 			{
 				// block until enough permits to create the molecule
 				try {
-					atomSemaphoreArray[i].acquire(numBonds[i]);
+					atomSemaphoreArray.get(i).acquire(numBonds[i]);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -57,17 +58,17 @@ public class ChemicalBondingCreator implements Runnable {
 			}
 		
 			System.out.println("Chemical bonding creator: "
-					+ "enough atoms to create a methane molecule");
+					+ "enough atoms to create a molecule");
 			
 			
 			for (int element = 0; element < numElements; element++)
 			{
 				// mutex on aList
-				synchronized(atomListArray[element])
+				synchronized(atomListArray.get(element))
 				{
 					// remove the first atom numBonds number of times and ublock that atom
 					for (int i=0; i < numBonds[element]; i++)
-						atomListArray[i].poll().allowBond();
+						atomListArray.get(element).poll().allowBond();
 				}
 			}
 		}

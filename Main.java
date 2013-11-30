@@ -24,6 +24,8 @@ public class Main {
 			numBonds[i]= stdin.nextInt();
 		}
 		
+		stdin.close();
+		
 		// create the bonding
 		ChemicalBondingCreator cbc = new ChemicalBondingCreator(numElements, numBonds);
 		Thread thread = new Thread(cbc);
