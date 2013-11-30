@@ -23,17 +23,28 @@ public class HydrogenAtom implements Runnable {
 		{
 			cbc.haList.add(this);
 		}
+		
+		// add 1 permit to hydrogen semaphore
+		cbc.hSemaphore.release(1);
+		
 		System.out.println("Hydrogen atom no: " + count
 				+ " waiting for bonding.");
 		try {
-			synchronized (cbc.waiton) {
-				cbc.waiton.acquire();
+			synchronized (cbc.hWaiton) {
+				cbc.hWaiton.acquire();
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Hydrogen atom no: " + count + " bonded, done.");
+		
+		// mutex on haList
+		synchronized(cbc.haList)
+		{
+			// remove this hydrogen from list
+			cbc.haList.remove(this);
+		}
 	}
 
 }

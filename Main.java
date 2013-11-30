@@ -9,7 +9,7 @@ public class Main {
 
 	
 	public static final void main(String args[]) {
-		System.out.println("Project 2");
+		System.out.println("Project 2 by Brandon Forster");
 		// create the bonding
 		ChemicalBondingCreator cbc = new ChemicalBondingCreator();
 		Thread thread = new Thread(cbc);

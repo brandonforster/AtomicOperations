@@ -5,54 +5,60 @@
 // ChemicalBondingCreator.java
 // Bonds atoms together.
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 
 public class ChemicalBondingCreator implements Runnable {
 
-	public Semaphore waiton = new Semaphore(0);
-	public List<HydrogenAtom> haList = new ArrayList<>();
-	public List<CarbonAtom> caList = new ArrayList<>();
+	public Semaphore hWaiton = new Semaphore(0);
+	public Semaphore cWaiton = new Semaphore(0);
+	
+	public Semaphore hSemaphore = new Semaphore(0);
+	public Semaphore cSemaphore = new Semaphore(0);
+	
+	public ConcurrentLinkedQueue<HydrogenAtom> haList = 
+			new ConcurrentLinkedQueue<>();
+	public ConcurrentLinkedQueue<CarbonAtom> caList = 
+			new ConcurrentLinkedQueue<>();
 
 	@Override
 	public void run() {
 		while (true) {
-			System.out.println("Chemical bonding creator, looking for bonding");
+			System.out.println("Chemical bonding creator: looking for bonding");
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// compensate for size() is 1 indexed and elements are 0 indexed
-			if (haList.size() > 4 && caList.size() > 1) {
-				System.out
-						.println("Chemical bonding creator: enough atoms to create a methane molecule");
-				// hopefully, this will release the
-				for (int i = 0; i < 5; i++) {
-					waiton.release(1);
-					
-					// mutex on haList
-					synchronized(haList)
-					{
-						// remove 4 hydrogens
-						haList.remove((4-i));
-					}
-				}
-				
-				// mutex on caList
-				synchronized(caList)
-				{
-					// remove 1 carbon
-					caList.remove(0);
-				}
-				continue;
+			
+			// block until enough permits to create the molecule
+			try {
+				hSemaphore.acquire(4);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (haList.size() >= 4) {
-				System.out
-						.println("Chemical bonding creator: enough H atoms, but no C atom");
-				continue;
+			
+			try {
+				cSemaphore.acquire(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+			System.out.println("Chemical bonding creator: "
+					+ "enough atoms to create a methane molecule");
+			
+			// signal that we need 4 hydrogens and 1 carbon to stop blocking
+			hWaiton.release(4);
+			cWaiton.release(1);
+			
+			synchronized (haList)
+			{
+				synchronized (haList)
+				{
+					System.out.println("HS: "+ hSemaphore+ " "+ haList+ "\nCS: "+cSemaphore+" " + caList);
+				}
 			}
 		}
 	}

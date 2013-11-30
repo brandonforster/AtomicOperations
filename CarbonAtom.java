@@ -23,17 +23,28 @@ public class CarbonAtom implements Runnable {
 		{
 			cbc.caList.add(this);
 		}
+		
+		// add 1 permit to carbon semaphore
+		cbc.cSemaphore.release(1);
+		
 		System.out.println("Carbon atom no: " + count
 				+ " waiting for bonding.");
 		try {
-			synchronized (cbc.waiton) {
-				cbc.waiton.acquire();
+			synchronized (cbc.cWaiton) {
+				cbc.cWaiton.acquire();
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Carbon atom no: " + count + " bonded, done.");
+		
+		// mutex on caList
+		synchronized(cbc.caList)
+		{
+			// remove 1 carbon
+			cbc.caList.remove(this);
+		}
 	}
 
 }
