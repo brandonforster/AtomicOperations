@@ -18,7 +18,11 @@ public class CarbonAtom implements Runnable {
 	@Override
 	public void run() {
 		System.out.println("Carbon atom no: " + count + " created.");
-		cbc.caList.add(this);
+		// mutex on caList
+		synchronized(cbc.caList)
+		{
+			cbc.caList.add(this);
+		}
 		System.out.println("Carbon atom no: " + count
 				+ " waiting for bonding.");
 		try {

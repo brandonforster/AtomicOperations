@@ -32,12 +32,21 @@ public class ChemicalBondingCreator implements Runnable {
 				// hopefully, this will release the
 				for (int i = 0; i < 5; i++) {
 					waiton.release(1);
-					// remove 4 hydrogens
-					haList.remove((4-i));
+					
+					// mutex on haList
+					synchronized(haList)
+					{
+						// remove 4 hydrogens
+						haList.remove((4-i));
+					}
 				}
 				
-				// remove 1 carbon
-				caList.remove(0);
+				// mutex on caList
+				synchronized(caList)
+				{
+					// remove 1 carbon
+					caList.remove(0);
+				}
 				continue;
 			}
 			if (haList.size() >= 4) {

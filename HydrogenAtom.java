@@ -18,7 +18,11 @@ public class HydrogenAtom implements Runnable {
 	@Override
 	public void run() {
 		System.out.println("Hydrogen atom no: " + count + " created.");
-		cbc.haList.add(this);
+		// mutex on haList
+		synchronized(cbc.haList)
+		{
+			cbc.haList.add(this);
+		}
 		System.out.println("Hydrogen atom no: " + count
 				+ " waiting for bonding.");
 		try {
