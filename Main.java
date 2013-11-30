@@ -25,7 +25,7 @@ public class Main {
 		}
 		
 		// create the bonding
-		ChemicalBondingCreator cbc = new ChemicalBondingCreator(numBonds);
+		ChemicalBondingCreator cbc = new ChemicalBondingCreator(numElements, numBonds);
 		Thread thread = new Thread(cbc);
 		thread.start();
 		

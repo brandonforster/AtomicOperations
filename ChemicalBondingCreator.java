@@ -8,18 +8,30 @@
 import java.util.concurrent.*;
 
 public class ChemicalBondingCreator implements Runnable {
-
-	public Semaphore waiton = new Semaphore(0);
-	
-	public Semaphore semaphore = new Semaphore(0);
-	
-	public ConcurrentLinkedQueue<Atom> aList = 
-			new ConcurrentLinkedQueue<>();
-			
+	private int numElements;
 	private int numBonds[];
 
-	public ChemicalBondingCreator(int[] numBonds) {
+	public Semaphore atomWaitArray[] = new Semaphore[numElements];	
+	public Semaphore atomSemaphoreArray[] = new Semaphore[numElements];
+	public ConcurrentLinkedQueue<Atom> atomListArray[]= new ConcurrentLinkedQueue[numElements];
+
+	public ChemicalBondingCreator(int numElements, int[] numBonds) {
+		this.numElements= numElements;
 		this.numBonds= numBonds;
+		
+		System.out.println(atomWaitArray.length);
+		
+		for (int i = 0; i < numElements; i++)
+		{
+			// set up the array of queues per element
+			atomListArray[i]= new ConcurrentLinkedQueue<Atom>();
+			
+			// set up the array of waitons per element
+			atomWaitArray[i]= new Semaphore(0);
+			
+			// set up the array of semaphores per element
+			atomSemaphoreArray[i]= new Semaphore(0);
+		}
 	}
 
 	@Override
@@ -33,23 +45,30 @@ public class ChemicalBondingCreator implements Runnable {
 				e.printStackTrace();
 			}
 			
-			// block until enough permits to create the molecule
-			try {
-				semaphore.acquire(4);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			for (int i = 0; i < numElements; i++)
+			{
+				// block until enough permits to create the molecule
+				try {
+					atomSemaphoreArray[i].acquire(numBonds[i]);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		
 			System.out.println("Chemical bonding creator: "
 					+ "enough atoms to create a methane molecule");
 			
-			// mutex on aList
-			synchronized(aList)
+			
+			for (int element = 0; element < numElements; element++)
 			{
-				// remove the first hydrogen from the list four times and unblock it
-				for (int i=0; i < 4; i++)
-					aList.poll().allowBond();
+				// mutex on aList
+				synchronized(atomListArray[element])
+				{
+					// remove the first atom numBonds number of times and ublock that atom
+					for (int i=0; i < numBonds[element]; i++)
+						atomListArray[i].poll().allowBond();
+				}
 			}
 		}
 	}
