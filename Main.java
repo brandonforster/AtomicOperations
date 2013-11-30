@@ -5,7 +5,7 @@
 // Main.java
 // The main function class for AtomicOperations.
 
-import java.util.Scanner;
+import java.util.*;
 		
 public class Main {
 
@@ -17,11 +17,32 @@ public class Main {
 		
 		Scanner stdin= new Scanner(System.in);		
 		int numElements= stdin.nextInt();
+		
+		while (numElements <= 0)
+		{
+			System.out.println("Please enter how many elements you want to bond, followed by how many atoms of each your bond needs.");
+			numElements= stdin.nextInt();
+		}
+		
 		int numBonds[]= new int[numElements];
 		
-		for (int i= 0; i< numElements; i++)
+		boolean validInput= false;
+		while (!validInput)
 		{
-			numBonds[i]= stdin.nextInt();
+			try
+			{
+				for (int i= 0; i< numElements; i++)
+				{
+					numBonds[i]= stdin.nextInt();
+				}
+				validInput= true;
+			} catch (InputMismatchException e)
+			{
+				System.out.println("Please enter the bond numbers for the number of elements you specified.");
+				
+				// clear the Scanner's buffer by telling it to read the next line
+				stdin.nextLine();
+			}
 		}
 		
 		stdin.close();
