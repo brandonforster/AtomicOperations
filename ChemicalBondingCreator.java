@@ -15,7 +15,6 @@ public class ChemicalBondingCreator implements Runnable {
 	// forms 2D lists to keep track of these per element
 	public ArrayList<ConcurrentLinkedQueue<Atom>> atomListArray=
 			new ArrayList<ConcurrentLinkedQueue<Atom>>();
-	public ArrayList<Semaphore> atomWaitArray= new ArrayList<Semaphore>();
 	public ArrayList<Semaphore> atomSemaphoreArray= new ArrayList<Semaphore>();
 
 	public ChemicalBondingCreator(int numElements, int[] numBonds) {
@@ -26,9 +25,6 @@ public class ChemicalBondingCreator implements Runnable {
 		{
 			// set up the array of queues per element
 			atomListArray.add(new ConcurrentLinkedQueue<Atom>());
-
-			// set up the array of waitons per element
-			atomWaitArray.add(new Semaphore(0));
 
 			// set up the array of semaphores per element
 			atomSemaphoreArray.add(new Semaphore(0));
