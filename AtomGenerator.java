@@ -2,19 +2,21 @@
 // COP 4600- Operating Systems
 // Homework 2- Threading
 // 2 December 2013
-// CarbonAtomGenerator.java
-// Generates Carbon atoms at random intervals.
+// AtomGenerator.java
+// Generates hydrogen atoms at random intervals.
 
 import java.util.Random;
 
-public class CarbonAtomGenerator implements Runnable {
+public class AtomGenerator implements Runnable {
 
 	private Random random = new Random();
 	int count = 0;
 	private ChemicalBondingCreator cbc;
+	private int atomicNumber;
 
-	public CarbonAtomGenerator(ChemicalBondingCreator cbc) {
+	public AtomGenerator(ChemicalBondingCreator cbc, int atomicNumber) {
 		this.cbc = cbc;
+		this.atomicNumber= atomicNumber;
 	}
 
 	@Override
@@ -26,8 +28,8 @@ public class CarbonAtomGenerator implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			CarbonAtom ca = new CarbonAtom(cbc, count++);
-			Thread thread = new Thread(ca);
+			Atom ha = new Atom(cbc, count++, atomicNumber);
+			Thread thread = new Thread(ha);
 			thread.start();
 		}
 	}

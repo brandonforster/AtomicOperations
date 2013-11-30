@@ -219,3 +219,5 @@ pip-log.txt
 /HydrogenAtomGenerator.class
 /Main.class
 /CarbonAtomGenerator.class
+/Atom.class
+/AtomGenerator.class

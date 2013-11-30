@@ -9,16 +9,18 @@ import java.util.concurrent.*;
 
 public class ChemicalBondingCreator implements Runnable {
 
-	public Semaphore hWaiton = new Semaphore(0);
-	public Semaphore cWaiton = new Semaphore(0);
+	public Semaphore waiton = new Semaphore(0);
 	
-	public Semaphore hSemaphore = new Semaphore(0);
-	public Semaphore cSemaphore = new Semaphore(0);
+	public Semaphore semaphore = new Semaphore(0);
 	
-	public ConcurrentLinkedQueue<HydrogenAtom> haList = 
+	public ConcurrentLinkedQueue<Atom> aList = 
 			new ConcurrentLinkedQueue<>();
-	public ConcurrentLinkedQueue<CarbonAtom> caList = 
-			new ConcurrentLinkedQueue<>();
+			
+	private int numBonds[];
+
+	public ChemicalBondingCreator(int[] numBonds) {
+		this.numBonds= numBonds;
+	}
 
 	@Override
 	public void run() {
@@ -33,14 +35,7 @@ public class ChemicalBondingCreator implements Runnable {
 			
 			// block until enough permits to create the molecule
 			try {
-				hSemaphore.acquire(4);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			try {
-				cSemaphore.acquire(1);
+				semaphore.acquire(4);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -49,19 +44,12 @@ public class ChemicalBondingCreator implements Runnable {
 			System.out.println("Chemical bonding creator: "
 					+ "enough atoms to create a methane molecule");
 			
-			// mutex on haList
-			synchronized(haList)
+			// mutex on aList
+			synchronized(aList)
 			{
 				// remove the first hydrogen from the list four times and unblock it
 				for (int i=0; i < 4; i++)
-					haList.poll().allowBond();
-			}
-			
-			// mutex on caList
-			synchronized(caList)
-			{
-				// remove the first carbon from the list and unblock it
-				caList.poll().allowBond();
+					aList.poll().allowBond();
 			}
 		}
 	}

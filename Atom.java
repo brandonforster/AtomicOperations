@@ -2,36 +2,38 @@
 // COP 4600- Operating Systems
 // Homework 2- Threading
 // 2 December 2013
-// HydrogenAtom.java
-// The HydrogenAtom object.
+// Atom.java
+// The Atom object.
 
 import java.util.concurrent.Semaphore;
 
-public class HydrogenAtom implements Runnable {
+public class Atom implements Runnable {
 
 	private ChemicalBondingCreator cbc;
 	private int count;
+	private int atomicNumber;
 	
 	private Semaphore waitToBond= new Semaphore(0);
 
-	public HydrogenAtom(ChemicalBondingCreator cbc, int count) {
+	public Atom(ChemicalBondingCreator cbc, int count, int atomicNumber) {
 		this.cbc = cbc;
 		this.count = count;
+		this.atomicNumber= atomicNumber;
 	}
 
 	@Override
 	public void run() {
-		System.out.println("Hydrogen atom no: " + count + " created.");
-		// mutex on haList
-		synchronized(cbc.haList)
+		System.out.println("Element #"+atomicNumber+" atom no: " + count + " created.");
+		// mutex on aList
+		synchronized(cbc.aList)
 		{
-			cbc.haList.add(this);
+			cbc.aList.add(this);
 		}
 		
-		// add 1 permit to hydrogen semaphore
-		cbc.hSemaphore.release(1);
+		// add 1 permit to semaphore
+		cbc.semaphore.release(1);
 		
-		System.out.println("Hydrogen atom no: " + count
+		System.out.println("Element #"+atomicNumber+" atom no: " + count
 				+ " waiting for bonding.");
 
 		// block until CBC tells atom it's ready for it
@@ -42,7 +44,7 @@ public class HydrogenAtom implements Runnable {
 			e.printStackTrace();
 		}
 		
-		System.out.println("Hydrogen atom no: " + count + " bonded, done.");
+		System.out.println("Element #"+atomicNumber+" atom no: " + count + " bonded, done.");
 	}
 	
 	public boolean allowBond()
