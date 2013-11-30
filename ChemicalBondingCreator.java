@@ -52,14 +52,6 @@ public class ChemicalBondingCreator implements Runnable {
 			// signal that we need 4 hydrogens and 1 carbon to stop blocking
 			hWaiton.release(4);
 			cWaiton.release(1);
-			
-			synchronized (haList)
-			{
-				synchronized (haList)
-				{
-					System.out.println("HS: "+ hSemaphore+ " "+ haList+ "\nCS: "+cSemaphore+" " + caList);
-				}
-			}
 		}
 	}
 
