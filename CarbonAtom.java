@@ -5,6 +5,8 @@
 // CarbonAtom.java
 // The CarbonAtom object.
 
+import java.util.concurrent.Semaphore;
+
 public class CarbonAtom implements Runnable {
 
 	private ChemicalBondingCreator cbc;
@@ -14,6 +16,8 @@ public class CarbonAtom implements Runnable {
 		this.cbc = cbc;
 		this.count = count;
 	}
+	
+	private Semaphore waitToBond= new Semaphore(0);
 
 	@Override
 	public void run() {
@@ -29,22 +33,23 @@ public class CarbonAtom implements Runnable {
 		
 		System.out.println("Carbon atom no: " + count
 				+ " waiting for bonding.");
+		
+		// block until CBC tells atom it's ready for it
 		try {
-			synchronized (cbc.cWaiton) {
-				cbc.cWaiton.acquire();
-			}
+			waitToBond.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Carbon atom no: " + count + " bonded, done.");
 		
-		// mutex on caList
-		synchronized(cbc.caList)
-		{
-			// remove 1 carbon
-			cbc.caList.remove(this);
-		}
+		System.out.println("Carbon atom no: " + count + " bonded, done.");
+	}
+	
+	public boolean allowBond()
+	{
+		waitToBond.release();
+		
+		return true;
 	}
 
 }

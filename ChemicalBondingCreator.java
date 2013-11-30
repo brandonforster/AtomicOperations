@@ -49,9 +49,20 @@ public class ChemicalBondingCreator implements Runnable {
 			System.out.println("Chemical bonding creator: "
 					+ "enough atoms to create a methane molecule");
 			
-			// signal that we need 4 hydrogens and 1 carbon to stop blocking
-			hWaiton.release(4);
-			cWaiton.release(1);
+			// mutex on haList
+			synchronized(haList)
+			{
+				// remove the first hydrogen from the list four times and unblock it
+				for (int i=0; i < 4; i++)
+					haList.poll().allowBond();
+			}
+			
+			// mutex on caList
+			synchronized(caList)
+			{
+				// remove the first carbon from the list and unblock it
+				caList.poll().allowBond();
+			}
 		}
 	}
 
