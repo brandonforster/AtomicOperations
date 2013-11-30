@@ -25,13 +25,19 @@ public class ChemicalBondingCreator implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if (haList.size() >= 4 && caList.size() >= 1) {
+			// compensate for size() is 1 indexed and elements are 0 indexed
+			if (haList.size() > 4 && caList.size() > 1) {
 				System.out
 						.println("Chemical bonding creator: enough atoms to create a methane molecule");
 				// hopefully, this will release the
-				for (int i = 0; i != 5; i++) {
+				for (int i = 0; i < 5; i++) {
 					waiton.release(1);
+					// remove 4 hydrogens
+					haList.remove((4-i));
 				}
+				
+				// remove 1 carbon
+				caList.remove(0);
 				continue;
 			}
 			if (haList.size() >= 4) {
